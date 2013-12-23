@@ -15,8 +15,9 @@ object ApplicationBuild extends Build {
     anorm,
     cache,
     "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-    "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test" // Compatible with ScalaTest
+    "org.easymock" % "easymock" % "3.1" withSources() withJavadoc()
   )
+
 
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
