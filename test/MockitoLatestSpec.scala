@@ -27,6 +27,7 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verify a stub was called once with any int param" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -37,6 +38,7 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verify a stub was called once with expected int param" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -47,6 +49,7 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verify func was called atLeastOnce with expected int param" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -58,6 +61,7 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "throw if func expected to be called atMost once but is called more than once" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -71,6 +75,7 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verifyNoMoreInteractions throws when there is a call to a func that were not stubbed" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -83,10 +88,25 @@ class MockitoLatestSpec extends WordSpec {
       }
     }
 
+    "DI - verify void func was called once" in {
+      // Arrange
+      val mockWarehouse = mock(classOf[IWarehouse])
+
+      val sut: Order = new Order(mockWarehouse)
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(mockWarehouse).remove(expected)
+    }
+
     "stub a func to throw" in {
+      // Arrange
       val sut = mock(classOf[IOrder])
       when(sut.remove(anyInt())).thenThrow(new scala.RuntimeException())
 
+      // Act & assert
       intercept[scala.RuntimeException] {
         sut.remove(expected)
       }

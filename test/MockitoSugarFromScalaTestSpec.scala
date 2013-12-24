@@ -84,26 +84,10 @@ class MockitoSugarFromScalaTestSpec extends WordSpec with MockitoSugar {
 
       // Assert
       intercept[org.mockito.exceptions.verification.NoInteractionsWanted] {
+        // This is not nice as we should be able to create mock or nice mock.
         verifyNoMoreInteractions(sut)
       }
     }
-
-    /*
-
-    "DI - verify void func was called once" in {
-      // arrange
-      val mockWarehouse = strictMock[IWarehouse]
-      expecting {
-        mockWarehouse.remove(expected).once()
-      }
-
-      val sut: Order = new Order(mockWarehouse)
-
-      whenExecuting(mockWarehouse) {
-        // Act & assert
-        sut.remove(expected)
-      }
-    }*/
 
     "DI - verify void func was called once" in {
       // Arrange
