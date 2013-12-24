@@ -2,76 +2,98 @@ package controllers
 
 import org.scalatest.WordSpec
 import org.mockito.Mockito._
+import org.mockito.Matchers._
+import helpers._
 
 class MockitoLatestSpec extends WordSpec {
   "MockitoLatest" should {
-    trait Sut {
-      def get(index: Integer): Integer = ???
+
+
+    "create mock (it is probably a strictMock)" in {
+      val sut = mock(classOf[IOrder])
     }
 
-    "create mock without throwing" in {
-      val sut = mock(classOf[Sut])
-    }
-
-    "verify a stub was called once with exact int param" in {
+    "return a stub value" in {
+      // Arrange
       val expected = 123
-      val sut = mock(classOf[Sut])
-      when(sut.get(0)).thenReturn(expected)
+      val sut = mock(classOf[IOrder])
+      when(sut.add).thenReturn(expected)
 
-      val result: Integer = sut.get(0)
+      // Act
+      val result: Integer = sut.add
 
-      verify(sut).get(0)
-    }
-
-    "verify a stub was called atLeastOnce with exact int param" in {
-      val expected = 123
-      val sut = mock(classOf[Sut])
-      when(sut.get(0)).thenReturn(expected)
-
-      val result: Integer = sut.get(0)
-
-      verify(sut, atLeastOnce()).get(0)
+      // Assert
+      assert(result == expected)
     }
 
     "verify a stub was called once with any int param" in {
-      val expected = 123
-      val sut = mock(classOf[Sut])
-      when(sut.get(0)).thenReturn(expected)
+      val randomInt = 123
+      val sut = mock(classOf[IOrder])
 
-      val result: Integer = sut.get(0)
+      // Act
+      sut.remove(randomInt)
 
-      verify(sut).get(0)
+      // Assert
+      verify(sut).remove(anyInt())
     }
 
-    "verifyNoMoreInteractions throws when there are method calls that were not stubbed" in {
+    "verify a stub was called once with expected int param" in {
       val expected = 123
-      val sut = mock(classOf[Sut])
-      when(sut.get(0)).thenReturn(expected)
+      val sut = mock(classOf[IOrder])
 
-      val result: Integer = sut.get(1)
+      // Act
+      sut.remove(expected)
 
+      // Assert
+      verify(sut).remove(expected)
+    }
+
+    "verify func was called atLeastOnce with expected int param" in {
+      val expected = 123
+      val sut = mock(classOf[IOrder])
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(sut, atLeastOnce()).remove(expected)
+    }
+
+    "throw if func expected to be called atMost once but is called more than once" in {
+      val expected = 123
+      val unexpected = 456
+      val sut = mock(classOf[IOrder])
+
+      // Act
+      sut.remove(expected)
+      sut.remove(unexpected)
+
+      // Assert
+      intercept[org.mockito.exceptions.base.MockitoAssertionError] {
+        verify(sut, atMost(1)).remove(anyInt())
+      }
+    }
+
+    "verifyNoMoreInteractions throws when there is a call to a func that were not stubbed" in {
+      val unexpected = 456
+      val sut = mock(classOf[IOrder])
+
+      // Act
+      sut.remove(unexpected)
+
+      // Assert
       intercept[org.mockito.exceptions.verification.NoInteractionsWanted] {
         // This is not nice as we should be able to create mock or nice mock.
         verifyNoMoreInteractions(sut)
       }
     }
 
-    "return a stub value" in {
-      val expected = 123
-      val sut = mock(classOf[Sut])
-      when(sut.get(0)).thenReturn(expected)
-
-      val result: Integer = sut.get(0)
-
-      assert(result == expected)
-    }
-
     "stub to throw" in {
-      val sut = mock(classOf[Sut])
-      when(sut.get(1)).thenThrow(new RuntimeException())
+      val sut = mock(classOf[IOrder])
+      when(sut.remove(1)).thenThrow(new scala.RuntimeException())
 
       intercept[scala.RuntimeException] {
-        sut.get(1)
+        sut.remove(1)
       }
     }
   }

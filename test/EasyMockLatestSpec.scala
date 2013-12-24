@@ -3,37 +3,22 @@ package controllers
 import org.scalatest.WordSpec
 import org.easymock.EasyMock._
 import org.easymock.EasyMock
+import helpers._
 
 class EasyMockLatestSpec extends WordSpec {
   "EasyMockLatest" should {
-    trait IWarehouse {
-      def add: Integer
-      def remove(index: Integer): Unit
-    }
+    val expected = 123
+    val unexpected = 456
 
-    trait IOrder {
-      def add: Integer
-      def remove(index: Integer): Unit
-    }
-
-    class Order(warehouse: IWarehouse) extends IOrder {
-      override def add: Integer = ???
-
-      override def remove(index: Integer): Unit = {
-        warehouse.remove(index)
-      }
-    }
-
-    "create mock using the latest version of EasyMock" in {
+    "create mock (it is probably a strictMock)" in {
       val sut = createMock(classOf[IOrder])
     }
 
-    "create strict mock using EasyMockSugar (which creates EasyMock version native to this version of ScalaTest)" in {
+    "create strict mock" in {
       val sut = createStrictMock(classOf[IOrder])
     }
 
     "returns a stub value" in {
-      val expected = 123
       val mockOrder = createStrictMock(classOf[IOrder])
       EasyMock.expect(mockOrder.add).andReturn(expected)
       EasyMock.replay(mockOrder) // Set mocks into testing mode.
@@ -46,32 +31,71 @@ class EasyMockLatestSpec extends WordSpec {
 
     "verify func called with any int input" in {
       // Arrange
-      val randomInt = 123
       val sut = createStrictMock(classOf[IOrder])
       EasyMock.expect(sut.remove(EasyMock.anyInt()))
       EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
 
       // Act
-      sut.remove(randomInt)
+      sut.remove(expected)
 
       // Assert
       verify(sut)
     }
 
+    "verify func called with exact int input" in {
+      // Arrange
+      val sut = createStrictMock(classOf[IOrder])
+      EasyMock.expect(sut.remove(expected))
+      EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(sut)
+    }
+
+    "verify func called atLeastOnce with exact int input" in {
+      // Arrange
+      val sut = createStrictMock(classOf[IOrder])
+      EasyMock.expect(sut.remove(expected)).atLeastOnce()
+      EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(sut)
+    }
+
+    "throw if func expected to be called once but is called more than once" in {
+      // Arrange
+      val sut = createStrictMock(classOf[IOrder])
+      EasyMock.expect(sut.remove(anyInt())).once()
+      EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      intercept[java.lang.AssertionError] {
+        sut.remove(unexpected)
+      }
+    }
+
     "DI - verify void func was called once" in {
-      // arrange
+      // Arrange
       val index = 50
       val mockWarehouse = createStrictMock(classOf[IWarehouse])
-      mockWarehouse.remove(index)
-      EasyMock.expectLastCall().once()
+      EasyMock.expect(mockWarehouse.remove(index)).once()
       EasyMock.replay(mockWarehouse)
 
       val order: Order = new Order(mockWarehouse)
 
-      //act
+      // Act
       order.remove(index)
 
-      // assert
+      // Assert
       EasyMock.verify(mockWarehouse)
     }
   }
