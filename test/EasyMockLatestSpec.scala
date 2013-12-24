@@ -98,5 +98,17 @@ class EasyMockLatestSpec extends WordSpec {
       // Assert
       EasyMock.verify(mockWarehouse)
     }
+
+    "stub a func to throw" in {
+      // Arrange
+      val mockOrder = createStrictMock(classOf[IOrder])
+      EasyMock.expect(mockOrder.remove(anyInt())).andThrow(new scala.RuntimeException())
+      EasyMock.replay(mockOrder) // Toggle framework from record to testing/replay mode.
+
+      // Act & assert
+      intercept[scala.RuntimeException] {
+        mockOrder.remove(expected)
+      }
+    }
   }
 }

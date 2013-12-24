@@ -5,6 +5,9 @@ import org.easymock.EasyMock._
 
 class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
   "EasyMockSugar from ScalaTest" should {
+    val expected = 123
+    val unexpected = 456
+
     "create mock using EasyMockSugar (should default to being a strict mock)" in {
       val sut = mock[IOrder]
     }
@@ -15,7 +18,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "return a stub value for a specific input using sugar 'expecting'" in {
       // Arrange
-      val expected = 123
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.add.andReturn(expected)
@@ -32,7 +34,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "returns a stub value using sugar 'whenExecuting'" in {
       // Arrange
-      val expected = 123
       val mockOrder = strictMock[IOrder]
       mockOrder.add.andReturn(expected)
 
@@ -47,7 +48,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "returns a stub value using sugars 'expecting' and 'whenExecuting'" in {
       // Arrange
-      val expected = 123
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.add.andReturn(expected)
@@ -64,7 +64,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "verify func was called with any int input" in {
       // Arrange
-      val randomInt = 123
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.remove(anyInt())
@@ -72,13 +71,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
       whenExecuting(mockOrder) {
         // Act
-        mockOrder.remove(randomInt)
+        mockOrder.remove(expected)
       } // Assert
     }
 
     "verify func called with expected int param" in {
       // Arrange
-      val expected = 123
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.remove(expected)
@@ -92,7 +90,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "verify func called atLeastOnce with expected int param" in {
       // Arrange
-      val expected = 123
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.remove(expected).atLeastOnce()
@@ -106,8 +103,6 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "throw if func expected to be called once but is called more than once" in {
       // Arrange
-      val expected = 123
-      val unexpected = 456
       val mockOrder = strictMock[IOrder]
       expecting {
         mockOrder.remove(anyInt()).once
@@ -135,9 +130,24 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       val sut: Order = new Order(mockWarehouse)
 
       whenExecuting(mockWarehouse) {
-        // Act
+        // Act & assert
         sut.remove(index)
-      } // Assert
+      }
+    }
+
+    "stub a func to throw" in {
+      // Arrange
+      val mockOrder = strictMock[IOrder]
+      expecting {
+        mockOrder.remove(anyInt()).andThrow(new scala.RuntimeException())
+      }
+
+      whenExecuting(mockOrder) {
+        intercept[scala.RuntimeException] {
+          // Act & assert
+          mockOrder.remove(expected)
+        }
+      }
     }
   }
 }

@@ -7,7 +7,8 @@ import helpers._
 
 class MockitoLatestSpec extends WordSpec {
   "MockitoLatest" should {
-
+    val expected = 123
+    val unexpected = 456
 
     "create mock (it is probably a strictMock)" in {
       val sut = mock(classOf[IOrder])
@@ -15,7 +16,6 @@ class MockitoLatestSpec extends WordSpec {
 
     "return a stub value" in {
       // Arrange
-      val expected = 123
       val sut = mock(classOf[IOrder])
       when(sut.add).thenReturn(expected)
 
@@ -27,18 +27,16 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verify a stub was called once with any int param" in {
-      val randomInt = 123
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(randomInt)
+      sut.remove(expected)
 
       // Assert
       verify(sut).remove(anyInt())
     }
 
     "verify a stub was called once with expected int param" in {
-      val expected = 123
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -49,10 +47,10 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verify func was called atLeastOnce with expected int param" in {
-      val expected = 123
       val sut = mock(classOf[IOrder])
 
       // Act
+      sut.remove(expected)
       sut.remove(expected)
 
       // Assert
@@ -60,8 +58,6 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "throw if func expected to be called atMost once but is called more than once" in {
-      val expected = 123
-      val unexpected = 456
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -75,7 +71,6 @@ class MockitoLatestSpec extends WordSpec {
     }
 
     "verifyNoMoreInteractions throws when there is a call to a func that were not stubbed" in {
-      val unexpected = 456
       val sut = mock(classOf[IOrder])
 
       // Act
@@ -88,12 +83,12 @@ class MockitoLatestSpec extends WordSpec {
       }
     }
 
-    "stub to throw" in {
+    "stub a func to throw" in {
       val sut = mock(classOf[IOrder])
-      when(sut.remove(1)).thenThrow(new scala.RuntimeException())
+      when(sut.remove(anyInt())).thenThrow(new scala.RuntimeException())
 
       intercept[scala.RuntimeException] {
-        sut.remove(1)
+        sut.remove(expected)
       }
     }
   }

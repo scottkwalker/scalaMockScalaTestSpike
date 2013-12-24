@@ -1,68 +1,101 @@
 package controllers
 
 import org.scalatest.WordSpec
-import org.scalatest.mock.{MockitoSugar}
+import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
+import helpers._
+import org.mockito.Matchers._
 
-class MockitoSugarFromScalaTestSpec extends WordSpec with MockitoSugar  {
+class MockitoSugarFromScalaTestSpec extends WordSpec with MockitoSugar {
   "MockitoSugar from ScalaTest" should {
-    trait Sut {
-      def get(index: Integer): Integer = ???
-    }
+    val expected = 123
+    val unexpected = 456
 
     "create mock without throwing" in {
-      val sut = mock[Sut]
+      val sut = mock[IOrder]
     }
 
-    "verify a stub was called once" in {
-      val expected = 123
-      val sut = mock[Sut]
-      when(sut.get(0)).thenReturn(expected)
+    "return a stub value" in {
+      // Arrange
+      val sut = mock[IOrder]
+      when(sut.add).thenReturn(expected)
 
-      val result: Integer = sut.get(0)
+      // Act
+      val result: Integer = sut.add
 
-      verify(sut).get(0)
+      // Assert
+      assert(result == expected)
     }
 
-    "verify a stub was called atLeastOnce" in {
-      val expected = 123
-      val sut = mock[Sut]
-      when(sut.get(0)).thenReturn(expected)
+    "verify a stub was called once with any int param" in {
+      // Arrange
+      val sut = mock[IOrder]
 
-      val result: Integer = sut.get(0)
+      // Act
+      sut.remove(expected)
 
-      verify(sut, atLeastOnce()).get(0)
+      // Assert
+      verify(sut).remove(anyInt())
+    }
+
+    "verify a stub was called once with expected int param" in {
+      // Arrange
+      val sut = mock[IOrder]
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(sut).remove(expected)
+    }
+
+    "verify func was called atLeastOnce with expected int param" in {
+      // Arrange
+      val sut = mock[IOrder]
+
+      // Act
+      sut.remove(expected)
+      sut.remove(expected)
+
+      // Assert
+      verify(sut, atLeastOnce()).remove(expected)
+    }
+
+    "throw if func expected to be called atMost once but is called more than once" in {
+      // Arrange
+      val sut = mock[IOrder]
+
+      // Act
+      sut.remove(expected)
+      sut.remove(unexpected)
+
+      // Assert
+      intercept[org.mockito.exceptions.base.MockitoAssertionError] {
+        verify(sut, atMost(1)).remove(anyInt())
+      }
     }
 
     "verifyNoMoreInteractions throws when there are method calls that were not stubbed" in {
-      val expected = 123
-      val sut = mock[Sut]
-      when(sut.get(0)).thenReturn(expected)
+      // Arrange
+      val sut = mock[IOrder]
 
-      val result: Integer = sut.get(1)
+      // Act
+      sut.remove(unexpected)
 
+      // Assert
       intercept[org.mockito.exceptions.verification.NoInteractionsWanted] {
         verifyNoMoreInteractions(sut)
       }
     }
 
-    "return a stub value" in {
-      val expected = 123
-      val sut = mock[Sut]
-      when(sut.get(0)).thenReturn(expected)
+    "stub a func to throw" in {
+      // Arrange
+      val sut = mock[IOrder]
+      when(sut.remove(anyInt())).thenThrow(new scala.RuntimeException())
 
-      val result: Integer = sut.get(0)
-
-      assert(result == expected)
-      verify(sut).get(0)
-    }
-
-    "stub to throw" in {
-      val sut = mock[Sut]
-      when(sut.get(1)).thenThrow(new RuntimeException())
-
+      // Act & assert
       intercept[scala.RuntimeException] {
-        sut.get(1)
+        sut.remove(expected)
       }
     }
   }
