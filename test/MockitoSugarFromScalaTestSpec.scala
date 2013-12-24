@@ -88,6 +88,36 @@ class MockitoSugarFromScalaTestSpec extends WordSpec with MockitoSugar {
       }
     }
 
+    /*
+
+    "DI - verify void func was called once" in {
+      // arrange
+      val mockWarehouse = strictMock[IWarehouse]
+      expecting {
+        mockWarehouse.remove(expected).once()
+      }
+
+      val sut: Order = new Order(mockWarehouse)
+
+      whenExecuting(mockWarehouse) {
+        // Act & assert
+        sut.remove(expected)
+      }
+    }*/
+
+    "DI - verify void func was called once" in {
+      // Arrange
+      val mockWarehouse = mock[IWarehouse]
+
+      val sut: Order = new Order(mockWarehouse)
+
+      // Act
+      sut.remove(expected)
+
+      // Assert
+      verify(mockWarehouse).remove(expected)
+    }
+
     "stub a func to throw" in {
       // Arrange
       val sut = mock[IOrder]

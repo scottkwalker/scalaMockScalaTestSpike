@@ -85,15 +85,14 @@ class EasyMockLatestSpec extends WordSpec {
 
     "DI - verify void func was called once" in {
       // Arrange
-      val index = 50
       val mockWarehouse = createStrictMock(classOf[IWarehouse])
-      EasyMock.expect(mockWarehouse.remove(index)).once()
+      EasyMock.expect(mockWarehouse.remove(expected)).once()
       EasyMock.replay(mockWarehouse)
 
       val order: Order = new Order(mockWarehouse)
 
       // Act
-      order.remove(index)
+      order.remove(expected)
 
       // Assert
       EasyMock.verify(mockWarehouse)

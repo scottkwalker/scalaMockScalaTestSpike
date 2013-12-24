@@ -121,17 +121,16 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
     "DI - verify void func was called once" in {
       // arrange
-      val index = 50
       val mockWarehouse = strictMock[IWarehouse]
       expecting {
-        mockWarehouse.remove(index).once()
+        mockWarehouse.remove(expected).once()
       }
 
       val sut: Order = new Order(mockWarehouse)
 
       whenExecuting(mockWarehouse) {
         // Act & assert
-        sut.remove(index)
+        sut.remove(expected)
       }
     }
 
