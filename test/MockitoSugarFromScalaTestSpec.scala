@@ -5,7 +5,7 @@ import org.scalatest.mock.{MockitoSugar}
 import org.mockito.Mockito._
 
 class MockitoSugarFromScalaTestSpec extends WordSpec with MockitoSugar  {
-  "MockitoLatest" should {
+  "MockitoSugar from ScalaTest" should {
     trait Sut {
       def get(index: Integer): Integer = ???
     }

@@ -4,7 +4,7 @@ import org.easymock.EasyMock._
 import org.easymock.EasyMock
 
 class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
-  "EasyMock" should {
+  "EasyMockSugar from ScalaTest" should {
     trait IWarehouse {
       def add: Integer
       def remove(index: Integer): Unit
@@ -49,7 +49,7 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       verify(mockOrder) // You don't need to tell it which calls to verify, it will verify ALL recorded expectations.
     }
 
-    "return a stub value for a specific input using sugar 'whenExecuting'" in {
+    "returns a stub value using sugar 'whenExecuting'" in {
       // Arrange
       val expected = 123
       val mockOrder = strictMock[IOrder]
@@ -64,7 +64,7 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       }
     }
 
-    "return a stub value for a specific input using sugars 'expecting' and 'whenExecuting'" in {
+    "returns a stub value using sugars 'expecting' and 'whenExecuting'" in {
       // Arrange
       val expected = 123
       val mockOrder = strictMock[IOrder]
@@ -95,7 +95,7 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       } // Assert
     }
 
-    "DI - verify void method was called once" in {
+    "DI - verify void func was called once" in {
       // arrange
       val index = 50
       val mockWarehouse = strictMock[IWarehouse]
