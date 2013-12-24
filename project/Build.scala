@@ -15,7 +15,8 @@ object ApplicationBuild extends Build {
     anorm,
     cache,
     "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-    "org.easymock" % "easymock" % "3.1" withSources() withJavadoc()
+    "org.easymock" % "easymock" % "3.1" withSources() withJavadoc(),
+    "org.mockito" % "mockito-all" % "1.9.5" % "test" withSources() withJavadoc()
   )
 
 
