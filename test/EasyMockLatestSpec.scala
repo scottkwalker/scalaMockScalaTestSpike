@@ -20,10 +20,10 @@ class EasyMockLatestSpec extends WordSpec {
 
     "returns a stub value" in {
       val mockOrder = createStrictMock(classOf[IOrder])
-      EasyMock.expect(mockOrder.add).andReturn(expected)
+      EasyMock.expect(mockOrder.submitOrder).andReturn(expected)
       EasyMock.replay(mockOrder) // Set mocks into testing mode.
 
-      val result: Integer = mockOrder.add
+      val result: Integer = mockOrder.submitOrder
 
       assert(result == expected)
       verify(mockOrder)
@@ -32,11 +32,11 @@ class EasyMockLatestSpec extends WordSpec {
     "verify func called with any int input" in {
       // Arrange
       val sut = createStrictMock(classOf[IOrder])
-      EasyMock.expect(sut.remove(EasyMock.anyInt()))
+      EasyMock.expect(sut.cancelOrder(EasyMock.anyInt()))
       EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
       verify(sut)
@@ -45,11 +45,11 @@ class EasyMockLatestSpec extends WordSpec {
     "verify func called with exact int input" in {
       // Arrange
       val sut = createStrictMock(classOf[IOrder])
-      EasyMock.expect(sut.remove(expected))
+      EasyMock.expect(sut.cancelOrder(expected))
       EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
       verify(sut)
@@ -58,11 +58,11 @@ class EasyMockLatestSpec extends WordSpec {
     "verify func called atLeastOnce with exact int input" in {
       // Arrange
       val sut = createStrictMock(classOf[IOrder])
-      EasyMock.expect(sut.remove(expected)).atLeastOnce()
+      EasyMock.expect(sut.cancelOrder(expected)).atLeastOnce()
       EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
       verify(sut)
@@ -71,15 +71,15 @@ class EasyMockLatestSpec extends WordSpec {
     "throw if func expected to be called once but is called more than once" in {
       // Arrange
       val sut = createStrictMock(classOf[IOrder])
-      EasyMock.expect(sut.remove(anyInt())).once()
+      EasyMock.expect(sut.cancelOrder(anyInt())).once()
       EasyMock.replay(sut) // Toggle framework from record to testing/replay mode.
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
       intercept[java.lang.AssertionError] {
-        sut.remove(unexpected)
+        sut.cancelOrder(unexpected)
       }
     }
 
@@ -92,7 +92,7 @@ class EasyMockLatestSpec extends WordSpec {
       val order: Order = new Order(mockWarehouse)
 
       // Act
-      order.remove(expected)
+      order.cancelOrder(expected)
 
       // Assert
       EasyMock.verify(mockWarehouse)
@@ -101,12 +101,12 @@ class EasyMockLatestSpec extends WordSpec {
     "stub a func to throw" in {
       // Arrange
       val mockOrder = createStrictMock(classOf[IOrder])
-      EasyMock.expect(mockOrder.remove(anyInt())).andThrow(new scala.RuntimeException())
+      EasyMock.expect(mockOrder.cancelOrder(anyInt())).andThrow(new scala.RuntimeException())
       EasyMock.replay(mockOrder) // Toggle framework from record to testing/replay mode.
 
       // Act & assert
       intercept[scala.RuntimeException] {
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
       }
     }
   }

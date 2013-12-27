@@ -20,12 +20,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.add.andReturn(expected)
+        mockOrder.submitOrder.andReturn(expected)
       }
       replay(mockOrder) // Toggle framework from record to testing/replay mode.
 
       // Act
-      val result: Integer = mockOrder.add
+      val result: Integer = mockOrder.submitOrder
 
       // Assert
       assert(result == expected)
@@ -35,11 +35,11 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
     "returns a stub value using sugar 'whenExecuting'" in {
       // Arrange
       val mockOrder = strictMock[IOrder]
-      mockOrder.add.andReturn(expected)
+      mockOrder.submitOrder.andReturn(expected)
 
       whenExecuting(mockOrder) {
         // Act
-        val result: Integer = mockOrder.add
+        val result: Integer = mockOrder.submitOrder
 
         // Assert
         assert(result == expected)
@@ -50,12 +50,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.add.andReturn(expected)
+        mockOrder.submitOrder.andReturn(expected)
       }
 
       whenExecuting(mockOrder) {
         // Act
-        val result: Integer = mockOrder.add
+        val result: Integer = mockOrder.submitOrder
 
         // Assert
         assert(result == expected)
@@ -66,12 +66,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.remove(anyInt())
+        mockOrder.cancelOrder(anyInt())
       }
 
       whenExecuting(mockOrder) {
         // Act
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
       } // Assert
     }
 
@@ -79,12 +79,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
       }
 
       whenExecuting(mockOrder) {
         // Act
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
       } // Assert
     }
 
@@ -92,12 +92,12 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.remove(expected).atLeastOnce()
+        mockOrder.cancelOrder(expected).atLeastOnce()
       }
 
       whenExecuting(mockOrder) {
         // Act
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
       } // Assert
     }
 
@@ -105,16 +105,16 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.remove(anyInt()).once
+        mockOrder.cancelOrder(anyInt()).once
       }
 
       whenExecuting(mockOrder) {
         // Act
-        mockOrder.remove(expected)
+        mockOrder.cancelOrder(expected)
 
         // Assert
         intercept[java.lang.AssertionError] {
-          mockOrder.remove(unexpected)
+          mockOrder.cancelOrder(unexpected)
         }
       }
     }
@@ -130,7 +130,7 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
 
       whenExecuting(mockWarehouse) {
         // Act & assert
-        sut.remove(expected)
+        sut.cancelOrder(expected)
       }
     }
 
@@ -138,13 +138,13 @@ class EasyMockSugarFromScalaTestSpec extends WordSpec with EasyMockSugar {
       // Arrange
       val mockOrder = strictMock[IOrder]
       expecting {
-        mockOrder.remove(anyInt()).andThrow(new scala.RuntimeException())
+        mockOrder.cancelOrder(anyInt()).andThrow(new scala.RuntimeException())
       }
 
       whenExecuting(mockOrder) {
         intercept[scala.RuntimeException] {
           // Act & assert
-          mockOrder.remove(expected)
+          mockOrder.cancelOrder(expected)
         }
       }
     }

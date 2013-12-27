@@ -17,10 +17,10 @@ class MockitoLatestSpec extends WordSpec {
     "return a stub value" in {
       // Arrange
       val sut = mock(classOf[IOrder])
-      when(sut.add).thenReturn(expected)
+      when(sut.submitOrder).thenReturn(expected)
 
       // Act
-      val result: Integer = sut.add
+      val result: Integer = sut.submitOrder
 
       // Assert
       assert(result == expected)
@@ -31,10 +31,10 @@ class MockitoLatestSpec extends WordSpec {
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
-      verify(sut).remove(anyInt())
+      verify(sut).cancelOrder(anyInt())
     }
 
     "verify a stub was called once with expected int param" in {
@@ -42,10 +42,10 @@ class MockitoLatestSpec extends WordSpec {
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
-      verify(sut).remove(expected)
+      verify(sut).cancelOrder(expected)
     }
 
     "verify func was called atLeastOnce with expected int param" in {
@@ -53,11 +53,11 @@ class MockitoLatestSpec extends WordSpec {
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(expected)
-      sut.remove(expected)
+      sut.cancelOrder(expected)
+      sut.cancelOrder(expected)
 
       // Assert
-      verify(sut, atLeastOnce()).remove(expected)
+      verify(sut, atLeastOnce()).cancelOrder(expected)
     }
 
     "throw if func expected to be called atMost once but is called more than once" in {
@@ -65,12 +65,12 @@ class MockitoLatestSpec extends WordSpec {
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(expected)
-      sut.remove(unexpected)
+      sut.cancelOrder(expected)
+      sut.cancelOrder(unexpected)
 
       // Assert
       intercept[org.mockito.exceptions.base.MockitoAssertionError] {
-        verify(sut, atMost(1)).remove(anyInt())
+        verify(sut, atMost(1)).cancelOrder(anyInt())
       }
     }
 
@@ -79,7 +79,7 @@ class MockitoLatestSpec extends WordSpec {
       val sut = mock(classOf[IOrder])
 
       // Act
-      sut.remove(unexpected)
+      sut.cancelOrder(unexpected)
 
       // Assert
       intercept[org.mockito.exceptions.verification.NoInteractionsWanted] {
@@ -95,7 +95,7 @@ class MockitoLatestSpec extends WordSpec {
       val sut: Order = new Order(mockWarehouse)
 
       // Act
-      sut.remove(expected)
+      sut.cancelOrder(expected)
 
       // Assert
       verify(mockWarehouse).remove(expected)
@@ -104,11 +104,11 @@ class MockitoLatestSpec extends WordSpec {
     "stub a func to throw" in {
       // Arrange
       val sut = mock(classOf[IOrder])
-      when(sut.remove(anyInt())).thenThrow(new scala.RuntimeException())
+      when(sut.cancelOrder(anyInt())).thenThrow(new scala.RuntimeException())
 
       // Act & assert
       intercept[scala.RuntimeException] {
-        sut.remove(expected)
+        sut.cancelOrder(expected)
       }
     }
   }

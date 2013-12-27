@@ -1,9 +1,9 @@
 package helpers
 
 class Order(warehouse: IWarehouse) extends IOrder {
-  override def add: Integer = ???
+  override def submitOrder: Integer = ???
 
-  override def remove(index: Integer): Unit = {
+  override def cancelOrder(index: Integer): Unit = {
     warehouse.remove(index)
   }
 }
